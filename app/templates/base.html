@@ -8,10 +8,15 @@
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-brand">HLIS<span>.</span></div>
+    <div class="nav-brand">
+      <div class="brand-title">HLIS</div>
+      <div class="brand-sub">Hospital Laboratory Information System</div>
+    </div>
+
     <div class="nav-links">
       {% block nav_links %}{% endblock %}
     </div>
+
     <div class="nav-right">
       <span class="nav-user">{{ session.name }}</span>
       <span class="nav-role role-{{ session.role }}">{{ session.role }}</span>

@@ -3,48 +3,149 @@
 
 {% block nav_links %}
   <a href="{{ url_for('doctor.dashboard') }}" class="nav-tab active">ค้นหาผู้ป่วย</a>
-  <a href="{{ url_for('doctor.profile') }}"   class="nav-tab">โปรไฟล์</a>
+  <a href="{{ url_for('doctor.profile') }}" class="nav-tab">โปรไฟล์</a>
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1>ค้นหาผู้ป่วย</h1>
+<div class="hero-panel">
+  <div class="hero-card">
+    <div class="hero-title">Doctor Workspace</div>
+    <div class="hero-desc">
+      ค้นหาประวัติผู้ป่วย สั่งตรวจทางห้องปฏิบัติการ และติดตามผลตรวจได้จากหน้าเดียว
+      ด้วยอินเทอร์เฟซที่ออกแบบให้ใช้งานได้รวดเร็วในบริบททางการแพทย์
+    </div>
+    <div class="hero-tags">
+      <span class="hero-tag">Patient Search</span>
+      <span class="hero-tag">Lab Orders</span>
+      <span class="hero-tag">Clinical Review</span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Search Status</div>
+      <div class="stat-value">{{ patients|length if patients else 0 }}</div>
+      <div class="stat-note">จำนวนผลลัพธ์ที่แสดงในขณะนี้</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Role</div>
+      <div class="stat-value" style="font-size:22px;">Doctor</div>
+      <div class="stat-note">สิทธิ์ใช้งานสำหรับแพทย์ผู้สั่งตรวจ</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">System</div>
+      <div class="stat-value" style="font-size:22px;">HLIS</div>
+      <div class="stat-note">Hospital Laboratory Information System</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Mode</div>
+      <div class="stat-value" style="font-size:22px;">Active</div>
+      <div class="stat-note">พร้อมสำหรับค้นหาและสั่งตรวจ</div>
+    </div>
+  </div>
 </div>
 
-<form method="GET" class="search-form">
-  <input type="text" name="q" value="{{ q }}" placeholder="ชื่อผู้ป่วย หรือ HN..." class="input-search" autofocus>
-  <button type="submit" class="btn btn-primary">ค้นหา</button>
-</form>
+<div class="quick-grid">
+  <div class="card">
+    <div class="section-title">ค้นหาผู้ป่วย</div>
+    <div class="section-sub">ค้นหาด้วยชื่อผู้ป่วยหรือ HN เพื่อเปิดดูข้อมูลและดำเนินการต่อ</div>
+
+    <form method="GET" class="search-form">
+      <input
+        type="text"
+        name="q"
+        value="{{ q }}"
+        placeholder="ค้นหาด้วยชื่อผู้ป่วย หรือ HN..."
+        class="input-search"
+        autofocus
+      >
+      <button type="submit" class="btn btn-primary">ค้นหา</button>
+      {% if q %}
+      <a href="{{ url_for('doctor.dashboard') }}" class="btn btn-secondary">ล้างคำค้น</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="section-title">คำแนะนำการใช้งาน</div>
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-icon">🔎</div>
+        <div class="info-content">
+          <strong>ค้นหาผู้ป่วย</strong>
+          <span>พิมพ์ชื่อหรือ HN เพื่อเข้าถึงข้อมูลผู้ป่วยอย่างรวดเร็ว</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">🧪</div>
+        <div class="info-content">
+          <strong>สั่งตรวจแล็บ</strong>
+          <span>เลือกชุดการตรวจที่ต้องการจากรายการมาตรฐานในระบบ</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">📄</div>
+        <div class="info-content">
+          <strong>ดูผลย้อนหลัง</strong>
+          <span>ติดตามผลการตรวจเพื่อใช้ประกอบการประเมินทางคลินิก</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% if patients %}
+<div class="toolbar">
+  <div>
+    <div class="section-title" style="margin-bottom:4px;">ผลการค้นหา</div>
+    <div class="section-sub" style="margin-bottom:0;">
+      พบผู้ป่วยจำนวน {{ patients|length }} รายการ
+    </div>
+  </div>
+</div>
+
+<div class="table-shell">
   <table class="table">
     <thead>
       <tr>
-        <th>HN</th><th>ชื่อ-นามสกุล</th><th>วันเกิด</th>
-        <th>หมู่เลือด</th><th>เบอร์โทร</th><th></th>
+        <th>HN</th>
+        <th>ชื่อ-นามสกุล</th>
+        <th>วันเกิด</th>
+        <th>หมู่เลือด</th>
+        <th>เบอร์โทร</th>
+        <th>การดำเนินการ</th>
       </tr>
     </thead>
     <tbody>
       {% for p in patients %}
       <tr>
         <td class="mono">{{ p.HN }}</td>
-        <td>{{ p.name }}</td>
+        <td><strong>{{ p.name }}</strong></td>
         <td>{{ p.dob }}</td>
         <td>{{ p.blood_type or '—' }}</td>
         <td>{{ p.contact_phone or '—' }}</td>
         <td>
-          <a href="{{ url_for('doctor.order_new', patient_id=p.patient_id) }}"
-             class="btn btn-primary btn-sm">สั่งตรวจ</a>
-          <a href="{{ url_for('doctor.results', patient_id=p.patient_id) }}"
-             class="btn btn-secondary btn-sm">ดูผล</a>
+          <a href="{{ url_for('doctor.order_new', patient_id=p.patient_id) }}" class="btn btn-primary btn-sm">สั่งตรวจ</a>
+          <a href="{{ url_for('doctor.results', patient_id=p.patient_id) }}" class="btn btn-secondary btn-sm">ดูผล</a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>
+
 {% elif q %}
+<div class="card">
   <p class="empty">ไม่พบผู้ป่วยที่ค้นหา "{{ q }}"</p>
+</div>
 {% else %}
-  <p class="empty">พิมพ์ชื่อหรือ HN เพื่อค้นหาผู้ป่วย</p>
+<div class="card">
+  <p class="empty">เริ่มต้นโดยพิมพ์ชื่อผู้ป่วยหรือ HN ในช่องค้นหาด้านบน</p>
+</div>
 {% endif %}
 {% endblock %}
