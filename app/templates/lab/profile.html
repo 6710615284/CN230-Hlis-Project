@@ -3,32 +3,58 @@
 
 {% block nav_links %}
   <a href="{{ url_for('lab.dashboard') }}" class="nav-tab">คิวรอตรวจ</a>
-  <a href="{{ url_for('lab.profile') }}"   class="nav-tab active">โปรไฟล์</a>
+  <a href="{{ url_for('lab.profile') }}" class="nav-tab active">โปรไฟล์</a>
 {% endblock %}
 
 {% block content %}
-<div class="page-header"><h1>โปรไฟล์</h1></div>
+<div class="page-header">
+  <h1>โปรไฟล์เจ้าหน้าที่ห้องปฏิบัติการ</h1>
+  <p class="sub">ดูข้อมูลบัญชีและเปลี่ยนรหัสผ่าน</p>
+</div>
 
-<div class="card" style="max-width:400px">
-  <table class="table-info">
-    <tr><td>ชื่อ</td><td>{{ session.name }}</td></tr>
-    <tr><td>Role</td><td>{{ session.role }}</td></tr>
-  </table>
+<div class="quick-grid">
+  <div class="card">
+    <div class="section-title">ข้อมูลบัญชี</div>
+    <table class="table-info">
+      <tr><td>ชื่อ</td><td>{{ session.name }}</td></tr>
+      <tr><td>Role</td><td><span class="badge role-lab">lab</span></td></tr>
+    </table>
+  </div>
 
-  <hr style="margin:16px 0;border-color:var(--border)">
+  <div class="card">
+    <div class="section-title">คำแนะนำ</div>
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-icon">🔐</div>
+        <div class="info-content">
+          <strong>จัดการรหัสผ่าน</strong>
+          <span>เปลี่ยนรหัสผ่านทันทีหากมีการใช้งานร่วมกันหรือพบความเสี่ยง</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🧪</div>
+        <div class="info-content">
+          <strong>บันทึกผลอย่างถูกต้อง</strong>
+          <span>ตรวจสอบหน่วยและช่วงค่าปกติก่อนบันทึกทุกครั้ง</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <h3 style="margin-bottom:12px">เปลี่ยน Password</h3>
+<div class="card" style="max-width:560px;">
+  <div class="section-title">เปลี่ยนรหัสผ่าน</div>
   <form method="POST">
     <div class="form-group">
       <label>Password ใหม่</label>
       <input type="password" name="new_password" class="input" required>
     </div>
-    <div class="form-group" style="margin-top:10px">
+    <div class="form-group" style="margin-top:12px;">
       <label>ยืนยัน Password</label>
       <input type="password" name="confirm_password" class="input" required>
     </div>
-    <div class="form-actions" style="margin-top:16px">
-      <button type="submit" class="btn btn-primary">บันทึก</button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">บันทึกการเปลี่ยนแปลง</button>
     </div>
   </form>
 </div>

@@ -3,15 +3,60 @@
 
 {% block nav_links %}
   <a href="{{ url_for('doctor.dashboard') }}" class="nav-tab">ค้นหาผู้ป่วย</a>
+  <a href="{{ url_for('doctor.profile') }}" class="nav-tab">โปรไฟล์</a>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
-  <h1>สั่งตรวจ</h1>
-  <p class="sub">{{ patient.name }} <span class="mono">{{ patient.HN }}</span></p>
+  <h1>สั่งตรวจทางห้องปฏิบัติการ</h1>
+  <p class="sub">
+    ผู้ป่วย: <strong>{{ patient.name }}</strong>
+    <span class="mono">HN {{ patient.HN }}</span>
+  </p>
+</div>
+
+<div class="quick-grid">
+  <div class="card">
+    <div class="section-title">ข้อมูลผู้ป่วย</div>
+    <table class="table-info">
+      <tr><td>HN</td><td class="mono">{{ patient.HN }}</td></tr>
+      <tr><td>ชื่อ</td><td>{{ patient.name }}</td></tr>
+      <tr><td>วันเกิด</td><td>{{ patient.dob or '—' }}</td></tr>
+      <tr><td>หมู่เลือด</td><td>{{ patient.blood_type or '—' }}</td></tr>
+      <tr><td>เบอร์โทร</td><td>{{ patient.contact_phone or '—' }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-title">คำแนะนำ</div>
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-icon">🧪</div>
+        <div class="info-content">
+          <strong>เลือกรายการตรวจ</strong>
+          <span>สามารถเลือกได้หลายรายการในใบสั่งเดียว</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">⚡</div>
+        <div class="info-content">
+          <strong>กำหนดความเร่งด่วน</strong>
+          <span>Routine สำหรับทั่วไป หรือ Urgent สำหรับงานเร่งด่วน</span>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">💳</div>
+        <div class="info-content">
+          <strong>สรุปราคารวม</strong>
+          <span>ยอดรวมจะคำนวณอัตโนมัติจากรายการที่เลือก</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <form method="POST" class="card">
+  <div class="section-title">รายละเอียดการสั่งตรวจ</div>
   <div class="form-row">
     <div class="form-group">
       <label>ระดับความเร่งด่วน</label>
@@ -22,24 +67,33 @@
     </div>
   </div>
 
-  <div class="form-group" style="margin-top:16px">
+  <div class="form-group" style="margin-top:18px;">
     <label>เลือกรายการตรวจ</label>
     <div class="test-list">
       {% for t in test_types %}
       <label class="test-item">
-        <input type="checkbox" name="test_ids" value="{{ t.test_id }}"
-               onchange="updateTotal()">
+        <input type="checkbox" name="test_ids" value="{{ t.test_id }}" onchange="updateTotal()">
         <span class="test-name">{{ t.name }}</span>
-        <span class="test-unit">{{ t.unit }}</span>
-        <span class="test-range">{{ t.normal_min }}–{{ t.normal_max }}</span>
-        <span class="test-price" data-price="{{ t.price }}">฿{{ "%.0f"|format(t.price) }}</span>
+        <span class="test-unit">{{ t.unit or '—' }}</span>
+        <span class="test-range">
+          {% if t.normal_min is not none and t.normal_max is not none %}
+            {{ t.normal_min }}–{{ t.normal_max }}
+          {% elif t.normal_min is not none %}
+            ≥ {{ t.normal_min }}
+          {% elif t.normal_max is not none %}
+            ≤ {{ t.normal_max }}
+          {% else %}
+            —
+          {% endif %}
+        </span>
+        <span class="test-price" data-price="{{ t.price }}">฿{{ '%.0f'|format(t.price) }}</span>
       </label>
       {% endfor %}
     </div>
   </div>
 
-  <div class="order-summary" id="summary" style="display:none">
-    รวม: <strong id="total-price">฿0</strong>
+  <div class="order-summary" id="summary" style="display:none;">
+    รวมค่าใช้จ่ายโดยประมาณ: <strong id="total-price">฿0</strong>
   </div>
 
   <div class="form-actions">
@@ -50,11 +104,11 @@
 
 <script>
 function updateTotal() {
-  const checked = document.querySelectorAll('input[name=test_ids]:checked');
+  const checked = document.querySelectorAll('input[name="test_ids"]:checked');
   let total = 0;
   checked.forEach(cb => {
     const price = cb.closest('label').querySelector('.test-price').dataset.price;
-    total += parseFloat(price);
+    total += parseFloat(price || 0);
   });
   document.getElementById('total-price').textContent = '฿' + total.toLocaleString();
   document.getElementById('summary').style.display = checked.length ? 'block' : 'none';
