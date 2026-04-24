@@ -17,7 +17,7 @@
 <div class="card">
   <div class="toolbar">
     <form method="GET" class="search-form" style="margin-bottom:0;">
-      <input type="text" name="q" value="{{ q }}" placeholder="ค้นหาด้วย HN หรือชื่อ..." class="input-search" autofocus>
+      <input type="text" id="patientSearch" name="q" value="{{ q }}" placeholder="ค้นหาด้วย HN หรือชื่อ..." class="input-search" autofocus>
       <button type="submit" class="btn btn-primary">ค้นหา</button>
       {% if q %}
       <a href="{{ url_for('admin.patients') }}" class="btn btn-secondary">ล้าง</a>
@@ -34,7 +34,7 @@
 
   {% if patients %}
   <div class="table-shell">
-    <table class="table admin-patient-table">
+    <table class="table admin-patient-table" id="patientTable">
       <thead>
         <tr>
           <th>HN</th>
@@ -83,4 +83,8 @@
   <p class="empty">ยังไม่มีผู้ป่วยในระบบ</p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/patients.js') }}" defer></script>
 {% endblock %}

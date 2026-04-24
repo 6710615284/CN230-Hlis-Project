@@ -45,12 +45,33 @@
 </div>
 
 <div class="card">
-  <div class="section-title">คิวรอดำเนินการ</div>
-  <div class="section-sub">แสดงรายการที่ยังมีผลตรวจค้างบันทึกในระบบ</div>
+  <div class="toolbar" style="margin-bottom:12px;">
+    <div>
+      <div class="section-title" style="margin-bottom:4px;">คิวรอดำเนินการ</div>
+      <div class="section-sub" style="margin-bottom:0;">แสดงรายการที่ยังมีผลตรวจค้างบันทึกในระบบ</div>
+    </div>
+
+    {% if orders %}
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <select id="queueFilter" class="input" style="min-width:160px;">
+        <option value="all">ทั้งหมด</option>
+        <option value="urgent">เฉพาะ urgent</option>
+        <option value="routine">เฉพาะ routine</option>
+      </select>
+
+      <select id="queueSort" class="input" style="min-width:190px;">
+        <option value="default">เรียงตามเดิม</option>
+        <option value="urgent-first">urgent ก่อน</option>
+        <option value="latest">เวลาล่าสุดก่อน</option>
+        <option value="pending-high">ค้างบันทึกมากไปน้อย</option>
+      </select>
+    </div>
+    {% endif %}
+  </div>
 
   {% if orders %}
   <div class="table-shell">
-    <table class="table lab-table">
+    <table class="table lab-table" id="labQueueTable">
       <thead>
         <tr>
           <th>Order #</th>
@@ -64,7 +85,11 @@
       </thead>
       <tbody>
         {% for o in orders %}
-        <tr>
+        <tr
+          data-priority="{{ o.priority }}"
+          data-pending="{{ o.pending_items }}"
+          data-ordered="{{ o.ordered_at.isoformat() if o.ordered_at else '' }}"
+        >
           <td class="mono">{{ o.order_id }}</td>
           <td>
             {% if o.priority == 'urgent' %}
@@ -99,4 +124,8 @@
   <p class="empty">ไม่มีคิวรอดำเนินการในขณะนี้</p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/lab-dashboard.js') }}" defer></script>
 {% endblock %}

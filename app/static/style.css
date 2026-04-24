@@ -913,3 +913,37 @@ textarea.input:focus {
 .admin-billing-table td:nth-child(3) {
     text-align: center;
 }
+
+.flash {
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  min-width: 320px;
+  max-width: 720px;
+  box-shadow: 0 16px 40px rgba(15, 55, 70, 0.18);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.flash.is-hiding {
+  opacity: 0;
+  transform: translate(-50%, -8px);
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+#orderSubmitBtn:disabled {
+  background: #c9d3d8;
+  border-color: #c9d3d8;
+  color: #ffffff;
+  opacity: 0.75;
+  cursor: not-allowed;
+  box-shadow: none;
+}

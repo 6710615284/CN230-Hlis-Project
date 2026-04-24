@@ -53,6 +53,7 @@
     <form method="GET" class="search-form" style="margin-bottom:0;">
       <input
         type="text"
+        id="patientSearch"
         name="q"
         value="{{ q }}"
         placeholder="ค้นหาด้วยชื่อผู้ป่วย หรือ HN..."
@@ -68,7 +69,7 @@
 
   {% if patients %}
   <div class="table-shell">
-    <table class="table doctor-table">
+    <table class="table doctor-table" id="patientTable">
       <thead>
         <tr>
           <th>HN</th>
@@ -112,4 +113,8 @@
   <p class="empty">เริ่มต้นโดยพิมพ์ชื่อผู้ป่วยหรือ HN ในช่องค้นหาด้านบน</p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/patients.js') }}" defer></script>
 {% endblock %}

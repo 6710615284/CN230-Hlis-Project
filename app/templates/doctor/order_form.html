@@ -60,7 +60,7 @@
   <div class="form-row">
     <div class="form-group">
       <label>ระดับความเร่งด่วน</label>
-      <select name="priority" class="input">
+      <select name="priority" class="input" id="prioritySelect">
         <option value="routine">Routine — ปกติ</option>
         <option value="urgent">Urgent — เร่งด่วน</option>
       </select>
@@ -72,7 +72,7 @@
     <div class="test-list">
       {% for t in test_types %}
       <label class="test-item">
-        <input type="checkbox" name="test_ids" value="{{ t.test_id }}" onchange="updateTotal()">
+        <input type="checkbox" name="test_ids" value="{{ t.test_id }}">
         <span class="test-name">{{ t.name }}</span>
         <span class="test-unit">{{ t.unit or '—' }}</span>
         <span class="test-range">
@@ -93,7 +93,9 @@
   </div>
 
   <div class="order-summary" id="summary" style="display:none;">
-    รวมค่าใช้จ่ายโดยประมาณ: <strong id="total-price">฿0</strong>
+    <div>จำนวนรายการที่เลือก: <strong id="selected-count">0</strong></div>
+    <div>ระดับความเร่งด่วน: <strong id="selected-priority">Routine</strong></div>
+    <div>รวมค่าใช้จ่ายโดยประมาณ: <strong id="total-price">฿0</strong></div>
   </div>
 
   <div class="form-actions">
@@ -102,20 +104,11 @@
       class="btn btn-secondary"
       {% if popup_mode %}data-popup-close{% endif %}
     >ยกเลิก</a>
-    <button type="submit" class="btn btn-primary">ยืนยันการสั่งตรวจ</button>
+    <button type="submit" class="btn btn-primary" id="orderSubmitBtn" disabled>ยืนยันการสั่งตรวจ</button>
   </div>
 </form>
+{% endblock %}
 
-<script>
-function updateTotal() {
-  const checked = document.querySelectorAll('input[name="test_ids"]:checked');
-  let total = 0;
-  checked.forEach(cb => {
-    const price = cb.closest('label').querySelector('.test-price').dataset.price;
-    total += parseFloat(price || 0);
-  });
-  document.getElementById('total-price').textContent = '฿' + total.toLocaleString();
-  document.getElementById('summary').style.display = checked.length ? 'block' : 'none';
-}
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/order-form.js') }}" defer></script>
 {% endblock %}

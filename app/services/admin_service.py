@@ -134,15 +134,32 @@ def get_staff(staff_id):
 
 def _staff_role_prefix(role):
     prefixes = {
-        "doctor": "doc",
+        "doctor": "doctor",
         "lab": "lab",
-        "admin": "adm",
+        "admin": "admin",
     }
     return prefixes[role]
 
 
-def _format_staff_username(role, staff_id):
-    return f"{_staff_role_prefix(role)}{staff_id:04d}"
+def _next_staff_username(cur, role):
+    prefix = _staff_role_prefix(role)
+
+    cur.execute(
+        "SELECT username FROM Staff WHERE role = %s AND username LIKE %s",
+        (role, f"{prefix}%"),
+    )
+
+    rows = cur.fetchall()
+    max_num = 0
+
+    for row in rows:
+        username = row["username"]
+        number_part = username.replace(prefix, "", 1)
+
+        if number_part.isdigit():
+            max_num = max(max_num, int(number_part))
+
+    return f"{prefix}{max_num + 1}"
 
 
 def _format_staff_password(staff_id):
@@ -164,7 +181,7 @@ def create_staff(name, role):
             )
 
             staff_id = cur.lastrowid
-            username = _format_staff_username(role, staff_id)
+            username = _next_staff_username(cur, role)
             raw_pw = _format_staff_password(staff_id)
             cur.execute(
                 "UPDATE Staff SET username = %s, password_hash = %s WHERE staff_id = %s",

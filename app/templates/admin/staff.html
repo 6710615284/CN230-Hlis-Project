@@ -18,11 +18,13 @@
   <div class="card" style="width:100%; max-width:420px;">
     <div class="section-title">รีเซ็ตรหัสผ่าน</div>
     <div class="section-sub">กำหนดรหัสผ่านใหม่ให้เจ้าหน้าที่</div>
+
     <form method="POST" id="pw-form">
       <div class="form-group">
         <label>รหัสผ่านใหม่</label>
         <input class="input" type="password" name="new_password" id="pw-input" required minlength="6">
       </div>
+
       <div class="form-actions">
         <button type="button" onclick="closePwModal()" class="btn btn-secondary">ยกเลิก</button>
         <button type="submit" class="btn btn-primary">บันทึก</button>
@@ -33,10 +35,22 @@
 
 <div class="card">
   <div class="toolbar">
-    <div>
-      <div class="section-title" style="margin-bottom:4px;">รายชื่อเจ้าหน้าที่</div>
-      <div class="section-sub" style="margin-bottom:0;">จำนวนทั้งหมด {{ staff_list|length if staff_list else 0 }} รายการ</div>
+    <div style="display:flex; flex-direction:column; gap:10px; min-width:280px;">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;">รายชื่อเจ้าหน้าที่</div>
+        <div class="section-sub" style="margin-bottom:0;">
+          จำนวนทั้งหมด {{ staff_list|length if staff_list else 0 }} รายการ
+        </div>
+      </div>
+
+      <input
+        type="text"
+        id="staffSearch"
+        class="input-search"
+        placeholder="ค้นหาชื่อ / username / role"
+      >
     </div>
+
     <a
       href="{{ url_for('admin.staff_new') }}"
       class="btn btn-primary"
@@ -47,7 +61,7 @@
 
   {% if staff_list %}
   <div class="table-shell">
-    <table class="table">
+    <table class="table" id="staffTable">
       <thead>
         <tr>
           <th>ID</th>
@@ -57,6 +71,7 @@
           <th>จัดการ</th>
         </tr>
       </thead>
+
       <tbody>
         {% for s in staff_list %}
         <tr>
@@ -64,6 +79,7 @@
           <td><strong>{{ s.name }}</strong></td>
           <td class="mono">{{ s.username }}</td>
           <td><span class="badge role-{{ s.role }}">{{ s.role }}</span></td>
+
           <td>
             <a
               href="{{ url_for('admin.staff_edit', sid=s.staff_id) }}"
@@ -71,7 +87,14 @@
               data-page-modal
               data-modal-title="แก้ไขข้อมูลเจ้าหน้าที่"
             >แก้ไข</a>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="openPwModal({{ s.staff_id }})">รีเซ็ต PW</button>
+
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              data-open-pw-modal
+              data-staff-id="{{ s.staff_id }}"
+            >รีเซ็ต PW</button>
+
             <form
               method="POST"
               action="{{ url_for('admin.staff_delete', sid=s.staff_id) }}"
@@ -89,19 +112,13 @@
       </tbody>
     </table>
   </div>
+
   {% else %}
   <p class="empty">ยังไม่มีเจ้าหน้าที่ในระบบ</p>
   {% endif %}
 </div>
+{% endblock %}
 
-<script>
-function openPwModal(sid) {
-  document.getElementById('pw-form').action = '/admin/staff/reset-pw/' + sid;
-  document.getElementById('pw-input').value = '';
-  document.getElementById('pw-modal').style.display = 'flex';
-}
-function closePwModal() {
-  document.getElementById('pw-modal').style.display = 'none';
-}
-</script>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/staff.js') }}" defer></script>
 {% endblock %}

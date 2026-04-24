@@ -16,21 +16,39 @@
 
 <div class="card">
   <div class="toolbar">
+  <div style="display:flex; flex-direction:column; gap:10px; min-width:320px;">
     <div>
       <div class="section-title" style="margin-bottom:4px;">รายการตรวจ</div>
-      <div class="section-sub" style="margin-bottom:0;">จำนวนทั้งหมด {{ testtypes|length if testtypes else 0 }} รายการ</div>
+      <div class="section-sub" style="margin-bottom:0;">
+        จำนวนทั้งหมด {{ testtypes|length if testtypes else 0 }} รายการ
+      </div>
     </div>
-    <a
-      href="{{ url_for('admin.testtype_new') }}"
-      class="btn btn-primary"
-      data-page-modal
-      data-modal-title="เพิ่มประเภทการตรวจ"
-    >+ เพิ่มประเภทการตรวจ</a>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <input
+        type="text"
+        id="testtypeSearch"
+        class="input-search"
+        placeholder="ค้นหาชื่อการตรวจ / หน่วย"
+      >
+
+      <select id="testtypeSort" class="input" style="min-width:180px;">
+        <option value="default">เรียงตามเดิม</option>
+        <option value="price-asc">ราคาน้อยไปมาก</option>
+        <option value="price-desc">ราคามากไปน้อย</option>
+        <option value="name-asc">ชื่อ A-Z</option>
+      </select>
+    </div>
   </div>
+
+  <a href="{{ url_for('admin.testtype_new') }}" class="btn btn-primary" data-page-modal data-modal-title="เพิ่มรายการตรวจ">
+    + เพิ่มรายการตรวจ
+  </a>
+</div>
 
   {% if testtypes %}
   <div class="table-shell">
-    <table class="table testtype-table">
+    <table class="table testtype-table" id="testtypeTable">
       <thead>
         <tr>
           <th>ชื่อการตรวจ</th>
@@ -43,7 +61,10 @@
       </thead>
       <tbody>
         {% for tt in testtypes %}
-        <tr>
+        <tr
+          data-name="{{ tt.name|lower }}"
+          data-price="{{ tt.price }}"
+        >
           <td><strong>{{ tt.name }}</strong></td>
           <td>{{ tt.unit or '—' }}</td>
           <td>{{ tt.normal_min or '—' }}</td>
@@ -66,4 +87,8 @@
   <p class="empty">ยังไม่มีประเภทการตรวจ</p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/testtypes.js') }}" defer></script>
 {% endblock %}
