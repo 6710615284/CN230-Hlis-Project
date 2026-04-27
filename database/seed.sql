@@ -2,12 +2,11 @@ USE hlis;
 
 -- Staff (5 คน)
 INSERT INTO Staff (name, role, username, password_hash) VALUES 
-('นพ.สมชาย ใจดี', 'doctor', 'doc0001', 'นพ.สมชาย ใจดี', 'doctor', 'doc0001', 'scrypt:32768:8:1$tzVVzF1jMpoc1Mv0$4041cc1fd2249f8f34fa135a44cc2cd1c925c8ac614281f16ee8a367d73b831ab105d465e1c0b580bd4ac2789d5dbab9940410920c8012a7535808330aeec549'),
-('นพ.วิภา รักษาดี', 'doctor', 'doc0002', 'นพ.วิภา รักษาดี', 'doctor', 'doc0002', 'scrypt:32768:8:1$sb90p16lHoTEEqjx$6a34ea75fc2e08f5350f6cd89c18e8aaf810e30e941db7e718f7e98d641f02ff1ad4e9d855d248c79e93a696900325782b60e3586123552c99779094d0107104'),
-('นักเทคนิค สมใจ', 'lab',    'lab0003', 'นักเทคนิค สมใจ', 'lab',    'lab0003', 'scrypt:32768:8:1$qt0zn8Tm5ZU57Pyp$92f0b971a0507e9ec8a625462a8981c29345a261820a007086dc5b484eb4bf3245edf9a8950a8eb529623095d6197c063decd4097d24f804b186205b4acf2e7d'),
-('นักเทคนิค มานะ', 'lab',    'lab0004', 'นักเทคนิค มานะ', 'lab',    'lab0004', 'scrypt:32768:8:1$B0IqTPRt0881PzBG$253c553c15a4b8cd54a9d57618fc77c343d2a59ef32309ee16c4efb61b15331282ca7cd742b42f4d7c927a7a09e581477e19a83aa609bf021fcbd26ebb621884'),
-('ผู้ดูแลระบบ',     'admin',  'adm0005', 'ผู้ดูแลระบบ',     'admin',  'adm0005', 'scrypt:32768:8:1$xTv04Ual13PdyGKr$4232b892e28fc9d920353499eea9619d580eeb16b5cec1e2f8069266107c7a3d0af099d22a79c9bbca056e4f86bbdb107b8740fb77b311f2a9931cf71dcece3b');
-
+('นพ.สมชาย ใจดี', 'doctor', 'doc0001', 'scrypt:32768:8:1$tzVVzF1jMpoc1Mv0$4041cc1fd2249f8f34fa135a44cc2cd1c925c8ac614281f16ee8a367d73b831ab105d465e1c0b580bd4ac2789d5dbab9940410920c8012a7535808330aeec549'),
+('นพ.วิภา รักษาดี', 'doctor', 'doc0002', 'scrypt:32768:8:1$sb90p16lHoTEEqjx$6a34ea75fc2e08f5350f6cd89c18e8aaf810e30e941db7e718f7e98d641f02ff1ad4e9d855d248c79e93a696900325782b60e3586123552c99779094d0107104'),
+('นักเทคนิค สมใจ', 'lab',    'lab0003', 'scrypt:32768:8:1$qt0zn8Tm5ZU57Pyp$92f0b971a0507e9ec8a625462a8981c29345a261820a007086dc5b484eb4bf3245edf9a8950a8eb529623095d6197c063decd4097d24f804b186205b4acf2e7d'),
+('นักเทคนิค มานะ', 'lab',    'lab0004', 'scrypt:32768:8:1$B0IqTPRt0881PzBG$253c553c15a4b8cd54a9d57618fc77c343d2a59ef32309ee16c4efb61b15331282ca7cd742b42f4d7c927a7a09e581477e19a83aa609bf021fcbd26ebb621884'),
+('ผู้ดูแลระบบ',     'admin',  'adm0005', 'scrypt:32768:8:1$ohGY8BzEbRabSuQn$3bc7a661b147fb10d1de2207c34eb9dd9d0cf39111b238bb562b6a32310cb30e1ad0985757befedb47db06c20822bfb12e28236fc6da9b5d4c62f0967ae150f9');
 -- Patient (5 คน)
 INSERT INTO Patient (HN, name, dob, blood_type, contact_phone) VALUES
 ('HN-00001', 'นาย สมศักดิ์ มีสุข',       '1980-05-15', 'A',  '081-111-1111'),
